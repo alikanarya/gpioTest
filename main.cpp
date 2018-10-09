@@ -22,15 +22,15 @@ int main(int argc, char *argv[]){
     gpioX = new gpioThread();
 
 
-    cout << gpioX->PWMCHIP0_PATH.toUtf8().constData() << endl;
-    cout << gpioX->PWMCHIP1_PATH.toUtf8().constData() << endl;
-/*
+    cout << gpioX->PWMCHIP0_PATH.toUtf8().constData() << " chip:" << gpioX->pwmchip0_No.toUtf8().constData() << endl;
+    cout << gpioX->PWMCHIP1_PATH.toUtf8().constData() << " chip:" << gpioX->PWMCHIP1_PATH.toUtf8()[gpioX->PWMCHIP1_PATH.toUtf8().size()-1] << endl;
+
     cout << gpioX->PWMCHIP0_EXPORT.toUtf8().constData() << endl;
     cout << gpioX->PWMCHIP0_P0_PERIOD.toUtf8().constData() << endl;
     cout << gpioX->PWMCHIP0_P0_DUTYCYCLE.toUtf8().constData() << endl;
     cout << gpioX->PWMCHIP0_P1_PERIOD.toUtf8().constData() << endl;
     cout << gpioX->PWMCHIP0_P1_DUTYCYCLE.toUtf8().constData() << endl;
-
+/*
     cout << gpioX->PWMCHIP1_EXPORT.toUtf8().constData() << endl;
     cout << gpioX->PWMCHIP1_P0_PERIOD.toUtf8().constData() << endl;
     cout << gpioX->PWMCHIP1_P0_DUTYCYCLE.toUtf8().constData() << endl;

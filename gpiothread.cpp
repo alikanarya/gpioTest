@@ -40,17 +40,23 @@ gpioThread::gpioThread(){
     pwmchip0 = consoleCMD(PWM48302200);
     pwmchip1 = consoleCMD(PWM48304200);
 
+    PWMCHIP0_EXPORT.append(PWMCHIP0_PATH).append(pwmchip0).append("/export");
 
+    pwmchip0_No = pwmchip0.toUtf8()[pwmchip0.toUtf8().size()-1];
+    PWMCHIP0_PATH.append("pwm-"+pwmchip0_No+"\\:0");
+    //PWMCHIP0_EXPORT.append(PWMCHIP0_PATH).append("/export");
+    /*
     PWMCHIP0_PATH.append(pwmchip0);
     PWMCHIP0_EXPORT.append(PWMCHIP0_PATH);
     PWMCHIP0_EXPORT.append("/export");
-
+    */
     PWMCHIP0_P0_ENABLE.append(PWMCHIP0_PATH);
-    PWMCHIP0_P0_ENABLE.append("/pwm0/enable");
-    PWMCHIP0_P0_PERIOD.append(PWMCHIP0_PATH);
-    PWMCHIP0_P0_PERIOD.append("/pwm0/period");
-    PWMCHIP0_P0_DUTYCYCLE.append(PWMCHIP0_PATH);
-    PWMCHIP0_P0_DUTYCYCLE.append("/pwm0/duty_cycle");
+    PWMCHIP0_P0_ENABLE.append("/enable");
+    //PWMCHIP0_P0_ENABLE.append("/pwm0/enable");    // Debian 8 kernel overlay
+    PWMCHIP0_P0_PERIOD.append(PWMCHIP0_PATH).append("/period");
+    //PWMCHIP0_P0_PERIOD.append("/pwm0/period");
+    PWMCHIP0_P0_DUTYCYCLE.append(PWMCHIP0_PATH).append("/duty_cycle");
+    //PWMCHIP0_P0_DUTYCYCLE.append("/pwm0/duty_cycle");
 
     PWMCHIP0_P1_ENABLE.append(PWMCHIP0_PATH);
     PWMCHIP0_P1_ENABLE.append("/pwm1/enable");
@@ -209,7 +215,7 @@ int gpioThread::pinDirection(int pinNo, QString pinDir){
     strcpy(setValue, pinDir.toLatin1().constData());
 
     if ((buttonHandle = fopen(GPIODirection, "rb+")) == NULL ){
-        printf("Cannot open direction handle.\n");
+        printf("Cannot open direction handle:pinDirection\n");
         return 1;
     }
     fwrite(&setValue, sizeof(char), 3, buttonHandle);
@@ -223,7 +229,7 @@ int gpioThread::pinRead(int pinNo){
     sprintf(GPIOValue, "/sys/class/gpio/gpio%d/value", pinNo);
 
     if ((buttonHandle = fopen(GPIOValue, "rb+")) == NULL ){
-        printf("Cannot open value handle.\n");
+        printf("Cannot open value handle:pinRead\n");
         return -1;
     }
     fread(&setValue, sizeof(char), 1, buttonHandle);
@@ -236,7 +242,7 @@ int gpioThread::pinWrite(int pinNo, char *value){
     //Write the value to the pin
     sprintf(GPIOValue, "/sys/class/gpio/gpio%d/value", pinNo);
     if ((buttonHandle = fopen(GPIOValue, "wb+")) == NULL ){
-        printf("Cannot open value handle.\n");
+        printf("Cannot open value handle:pinWrite\n");
         return 1;
     }
     strcpy(setValue, value);
@@ -261,7 +267,7 @@ int gpioThread::pwmPeriod(int chip, int pinNo, int value){
         return -1;
 
     if ((buttonHandle = fopen(GPIOValue, "wb+")) == NULL ){
-        printf("Cannot open value handle.\n");
+        printf("Cannot open value handle:pwmPeriod\n");
         return 1;
     }
 
@@ -286,7 +292,7 @@ int gpioThread::pwmDutyCycle(int chip, int pinNo, int value){
         return -1;
 
     if ((buttonHandle = fopen(GPIOValue, "wb+")) == NULL ){
-        printf("Cannot open value handle.\n");
+        printf("Cannot open value handle:pwmDutyCycle\n");
         return 1;
     }
 
