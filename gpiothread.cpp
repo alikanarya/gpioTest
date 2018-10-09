@@ -37,53 +37,60 @@ gpioThread::gpioThread(){
         pinWrite( dOutGpioMap[i], ch );
     }
 
-    pwmchip0 = consoleCMD(PWM48302200);
-    pwmchip1 = consoleCMD(PWM48304200);
+    pwmchip0 = consoleCMD(PWM48302200);                                                     // eg: pwmchip3
+    pwmchip1 = consoleCMD(PWM48304200);                                                     // eg: pwmchip6
 
-    PWMCHIP0_EXPORT.append(PWMCHIP0_PATH).append(pwmchip0).append("/export");
+    PWMCHIP0_PATH.append(pwmchip0);                                                         // /sys/class/pwm/pwmchip3
+    PWMCHIP0_EXPORT.append(PWMCHIP0_PATH).append("/export");                                // /sys/class/pwm/pwmchip3/export
+    pwmchip0_No = pwmchip0.toUtf8()[pwmchip0.toUtf8().size()-1];                            // 3
+    PWMCHIP0_PATH.append("/pwm-"+pwmchip0_No+":0");                                       // /sys/class/pwm/pwmchip3/pwm-3\:0
+    PWMCHIP0_P0_ENABLE.append(PWMCHIP0_PATH).append("/enable");                             // /sys/class/pwm/pwmchip3/pwm-3\:0/enable
+    PWMCHIP0_P0_PERIOD.append(PWMCHIP0_PATH).append("/period");                             // /sys/class/pwm/pwmchip3/pwm-3\:0/period
+    PWMCHIP0_P0_DUTYCYCLE.append(PWMCHIP0_PATH).append("/duty_cycle");                      // /sys/class/pwm/pwmchip3/pwm-3\:0/duty_cycle
+    PWMCHIP0_P1_ENABLE.append(PWMCHIP0_PATH).append("/enable").replace("0","1");            // /sys/class/pwm/pwmchip3/pwm-3\:1/enable
+    PWMCHIP0_P1_PERIOD.append(PWMCHIP0_PATH).append("/period").replace("0","1");            // /sys/class/pwm/pwmchip3/pwm-3\:1/period
+    PWMCHIP0_P1_DUTYCYCLE.append(PWMCHIP0_PATH).append("/duty_cycle").replace("0","1");     // /sys/class/pwm/pwmchip3/pwm-3\:1/duty_cycle
 
-    pwmchip0_No = pwmchip0.toUtf8()[pwmchip0.toUtf8().size()-1];
-    PWMCHIP0_PATH.append("pwm-"+pwmchip0_No+"\\:0");
-    //PWMCHIP0_EXPORT.append(PWMCHIP0_PATH).append("/export");
-    /*
+    PWMCHIP1_PATH.append(pwmchip1);                                                         // /sys/class/pwm/pwmchip6
+    PWMCHIP1_EXPORT.append(PWMCHIP1_PATH).append("/export");                                // /sys/class/pwm/pwmchip6/export
+    pwmchip1_No = pwmchip1.toUtf8()[pwmchip1.toUtf8().size()-1];                            // 6
+    PWMCHIP1_PATH.append("/pwm-"+pwmchip1_No+":0");                                       // /sys/class/pwm/pwmchip6/pwm-6\:0
+    PWMCHIP1_P0_ENABLE.append(PWMCHIP1_PATH).append("/enable");                             // /sys/class/pwm/pwmchip6/pwm-6\:0/enable
+    PWMCHIP1_P0_PERIOD.append(PWMCHIP1_PATH).append("/period");                             // /sys/class/pwm/pwmchip6/pwm-6\:0/period
+    PWMCHIP1_P0_DUTYCYCLE.append(PWMCHIP1_PATH).append("/duty_cycle");                      // /sys/class/pwm/pwmchip6/pwm-6\:0/duty_cycle
+    PWMCHIP1_P1_ENABLE.append(PWMCHIP1_PATH).append("/enable").replace("0","1");            // /sys/class/pwm/pwmchip6/pwm-6\:1/enable
+    PWMCHIP1_P1_PERIOD.append(PWMCHIP1_PATH).append("/period").replace("0","1");            // /sys/class/pwm/pwmchip6/pwm-6\:1/period
+    PWMCHIP1_P1_DUTYCYCLE.append(PWMCHIP1_PATH).append("/duty_cycle").replace("0","1");     // /sys/class/pwm/pwmchip6/pwm-6\:1/duty_cycle
+
+    /* Debian 8 kernel overlay
     PWMCHIP0_PATH.append(pwmchip0);
-    PWMCHIP0_EXPORT.append(PWMCHIP0_PATH);
-    PWMCHIP0_EXPORT.append("/export");
-    */
-    PWMCHIP0_P0_ENABLE.append(PWMCHIP0_PATH);
-    PWMCHIP0_P0_ENABLE.append("/enable");
-    //PWMCHIP0_P0_ENABLE.append("/pwm0/enable");    // Debian 8 kernel overlay
-    PWMCHIP0_P0_PERIOD.append(PWMCHIP0_PATH).append("/period");
-    //PWMCHIP0_P0_PERIOD.append("/pwm0/period");
-    PWMCHIP0_P0_DUTYCYCLE.append(PWMCHIP0_PATH).append("/duty_cycle");
-    //PWMCHIP0_P0_DUTYCYCLE.append("/pwm0/duty_cycle");
-
-    PWMCHIP0_P1_ENABLE.append(PWMCHIP0_PATH);
-    PWMCHIP0_P1_ENABLE.append("/pwm1/enable");
-    PWMCHIP0_P1_PERIOD.append(PWMCHIP0_PATH);
-    PWMCHIP0_P1_PERIOD.append("/pwm1/period");
-    PWMCHIP0_P1_DUTYCYCLE.append(PWMCHIP0_PATH);
-    PWMCHIP0_P1_DUTYCYCLE.append("/pwm1/duty_cycle");
-
+    PWMCHIP0_EXPORT.append(PWMCHIP0_PATH).append("/export");
+    PWMCHIP0_P0_ENABLE.append("/pwm0/enable");
+    PWMCHIP0_P0_PERIOD.append("/pwm0/period");
+    PWMCHIP0_P0_DUTYCYCLE.append("/pwm0/duty_cycle");
+    PWMCHIP0_P1_ENABLE.append(PWMCHIP0_PATH).append("/pwm1/enable");
+    PWMCHIP0_P1_PERIOD.append(PWMCHIP0_PATH).append("/pwm1/period");
+    PWMCHIP0_P1_DUTYCYCLE.append(PWMCHIP0_PATH).append("/pwm1/duty_cycle");
 
     PWMCHIP1_PATH.append(pwmchip1);
     PWMCHIP1_EXPORT.append(PWMCHIP1_PATH);
     PWMCHIP1_EXPORT.append("/export");
-
     PWMCHIP1_P0_ENABLE.append(PWMCHIP1_PATH);
     PWMCHIP1_P0_ENABLE.append("/pwm0/enable");
     PWMCHIP1_P0_PERIOD.append(PWMCHIP1_PATH);
     PWMCHIP1_P0_PERIOD.append("/pwm0/period");
     PWMCHIP1_P0_DUTYCYCLE.append(PWMCHIP1_PATH);
     PWMCHIP1_P0_DUTYCYCLE.append("/pwm0/duty_cycle");
-
     PWMCHIP1_P1_ENABLE.append(PWMCHIP1_PATH);
     PWMCHIP1_P1_ENABLE.append("/pwm1/enable");
     PWMCHIP1_P1_PERIOD.append(PWMCHIP1_PATH);
     PWMCHIP1_P1_PERIOD.append("/pwm1/period");
     PWMCHIP1_P1_DUTYCYCLE.append(PWMCHIP1_PATH);
     PWMCHIP1_P1_DUTYCYCLE.append("/pwm1/duty_cycle");
+    */
 
+
+//    pinExport( PWMCHIP0_EXPORT, 0 );
     pinExport( PWMCHIP0_EXPORT.toUtf8().constData(), 0 );
     pinExport( PWMCHIP0_EXPORT.toUtf8().constData(), 1 );
     pinExport( PWMCHIP1_EXPORT.toUtf8().constData(), 0 );
@@ -99,6 +106,7 @@ gpioThread::gpioThread(){
     pinExport( PWMCHIP0_P1_ENABLE.toUtf8().constData(), 1 );    // enable output
     pinExport( PWMCHIP1_P0_ENABLE.toUtf8().constData(), 1 );    // enable output
     pinExport( PWMCHIP1_P1_ENABLE.toUtf8().constData(), 1 );    // enable output
+    //pinExport( PWMCHIP1_P1_ENABLE, 1 );    // enable output
 
     stopped = false;
 }

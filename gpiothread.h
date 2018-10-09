@@ -59,6 +59,7 @@ public:
     QString PWMCHIP0_P1_DUTYCYCLE = "";
 
     QString pwmchip1;
+    QString pwmchip1_No;
     QString PWMCHIP1_PATH = "/sys/class/pwm/";
     QString PWMCHIP1_EXPORT = "";
     QString PWMCHIP1_P0_ENABLE = "";
