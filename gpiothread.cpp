@@ -181,7 +181,7 @@ void gpioThread::gpioOps(){
     clientx->datagram.append( 'Z' );
     //cout << endl;   //DBG
 
-    cout << clientx->datagram.data() << endl;     //DBG
+    // cout << clientx->datagram.data() << endl;     //DBG
 
     if (clientx->clientSocket.state() == QAbstractSocket::ConnectedState)
         clientx->startTransfer();
