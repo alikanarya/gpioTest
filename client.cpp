@@ -20,6 +20,7 @@ Client::~Client(){
 
 void Client::start(){
 
+    host.setAddress(clientAddress);
     clientSocket.connectToHost(host, clientPort);
     //clientSocket.waitForConnected(5000);
 }

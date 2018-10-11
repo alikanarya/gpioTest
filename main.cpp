@@ -6,12 +6,15 @@
 
 using namespace std;
 
+QSettings *settings;
 Server *serverx;
 Client *clientx;
 gpioThread *gpioX;
 
 const int aInpSize = 7;
 const int aOutSize = 4;
+
+//bool readSettings(){}
 
 int main(int argc, char *argv[]){
 
@@ -21,6 +24,16 @@ int main(int argc, char *argv[]){
     clientx = new Client();
     gpioX = new gpioThread();
 
+    settings = new QSettings(INIFILENAME, QSettings::IniFormat);
+
+    if (QFile::exists(INIFILENAME)){
+
+        clientx->clientAddress = settings->value("clientAddress0", _CLIENT_ADR).toString();
+        cout << clientx->clientAddress.toUtf8().constData() << endl; //return true;
+
+    } else {
+        qDebug() << "ini file not found" << endl; //return false;
+    }
 
     cout << gpioX->PWMCHIP0_PATH.toUtf8().constData() << " chip:" << gpioX->pwmchip0_No.toUtf8().constData() << endl;
     cout << gpioX->PWMCHIP1_PATH.toUtf8().constData() << " chip:" << gpioX->pwmchip1_No.toUtf8().constData() << endl;

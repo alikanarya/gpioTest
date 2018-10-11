@@ -35,45 +35,48 @@ void Server::startRead(){
     while (client->bytesAvailable())
         datagram.append(client->readAll());
 
-    for (int i = 0; i < gpioX->dOutSize; i++) {
-        gpioX->dOutArr[i] = datagram.data()[i];
-        //cout << gpioX->dOutArr[i] << ".";   //DBG
-    }
+    if (!datagram.isEmpty()) {
 
-
-    cout <<  datagram.data() ;//<< endl;
-
-    int pos = gpioX->dOutSize;
-    char ch = datagram.at(pos);
-    //cout << ch << endl;      //DBG
-
-    int j = 0, x = 0;
-    while (ch != 'Z') {
-        //x = 0;
-        if (ch == 'A') {
-            char temp[16];
-            j = -1;
-            do {
-                pos++;
-                ch = datagram.at(pos);
-                //cout << " " << ch;
-                if (ch == 'Z') break;
-                if (ch == 'A') break;
-                j++;
-                temp[j] = ch;
-
-            } while ( ch != 'Z' );
-
-            temp [j+1] = '\0';
-            gpioX->aOutArr[x] = atoi(temp);
-            cout << " " << gpioX->aOutArr[x];
-            x++;
-
+        for (int i = 0; i < gpioX->dOutSize; i++) {
+            gpioX->dOutArr[i] = datagram.data()[i];
+            //cout << gpioX->dOutArr[i] << ".";   //DBG
         }
-    }
-    cout << endl;
 
-    //cout <<  datagram.data() << endl;
+
+        cout <<  datagram.data() ;//<< endl;
+
+        int pos = gpioX->dOutSize;
+        char ch = datagram.at(pos);
+        //cout << ch << endl;      //DBG
+
+        int j = 0, x = 0;
+        while (ch != 'Z') {
+            //x = 0;
+            if (ch == 'A') {
+                char temp[16];
+                j = -1;
+                do {
+                    pos++;
+                    ch = datagram.at(pos);
+                    //cout << " " << ch;
+                    if (ch == 'Z') break;
+                    if (ch == 'A') break;
+                    j++;
+                    temp[j] = ch;
+
+                } while ( ch != 'Z' );
+
+                temp [j+1] = '\0';
+                gpioX->aOutArr[x] = atoi(temp);
+                cout << " " << gpioX->aOutArr[x];
+                x++;
+
+            }
+        }
+        cout << endl;
+
+        //cout <<  datagram.data() << endl;
+    }
 
     emit this->readFinished();
     //client->close();

@@ -169,7 +169,7 @@ void gpioThread::gpioOps(){
 
     int val = 0;
 
-    for (int i=0; i<2; i++){
+    for (int i=0; i<7; i++){
         val = readAnalog(i);
         //cout << "ADC" << i <<": " << val << "...";  //DBG
         clientx->datagram.append( 'A' );
@@ -181,7 +181,7 @@ void gpioThread::gpioOps(){
     clientx->datagram.append( 'Z' );
     //cout << endl;   //DBG
 
-    //cout << clientx->datagram.data() << endl;     //DBG
+    cout << clientx->datagram.data() << endl;     //DBG
 
     if (clientx->clientSocket.state() == QAbstractSocket::ConnectedState)
         clientx->startTransfer();

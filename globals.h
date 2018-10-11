@@ -5,6 +5,8 @@
 #include "client.h"
 #include "gpiothread.h"
 
+#define INIFILENAME         "settings.ini"
+#define _CLIENT_ADR         "localhost"
 
 QString MSG_SERVER_INIT = "Server is listening...";
 QString MSG_CLIENT_CONN = "Client connected";
