@@ -24,34 +24,34 @@ gpioThread::gpioThread(){
 
     bool exportStatus = false;
     for (int i = 0; i < dInpSize; i++) {
-        if (pinRead(dInpGpioMap[i]) != -1) {
+        if (pinRead(dInpGpioMap[i], false) != -1) {
             exportStatus = true;
-            cout << "pin in allready exported" << endl;
+            cout << "pin in already exported" << endl;
             //timerSec->stop();
         }
-        dInpArr[i] = setValue[0];
-        clientx->datagram.append( setValue[0] );
+        if (!exportStatus) {
+            cout << "pin in will be exported" << endl;
+            pinExport( "/sys/class/gpio/export", dInpGpioMap[i] );
+        }
+        exportStatus = false;
     }
 
+    exportStatus = false;
     for (int i = 0; i < dOutSize; i++) {
-        if (pinRead(dOutGpioMap[i]) != -1) {
+        if (pinRead(dOutGpioMap[i], false) != -1) {
             exportStatus = true;
-            cout << "pin out allready exported" << endl;
+            cout << "pin out already exported" << endl;
             //timerSec->stop();
         }
-        //pinRead( dOutGpioMap[i] );
-        dOutReadArr[i] = setValue[0];
-        clientx->datagram.append( setValue[0] );
+        if (!exportStatus) {
+            cout << "pin out will be exported" << endl;
+            pinExport( "/sys/class/gpio/export", dOutGpioMap[i] );
+        }
+        exportStatus = false;
     }
 
     if (!exportStatus) {
-        for (int i = 0; i < dInpSize; i++) {
-            pinExport( "/sys/class/gpio/export", dInpGpioMap[i] );
-        }
-
-        for (int i = 0; i < dOutSize; i++) {
-            pinExport( "/sys/class/gpio/export", dOutGpioMap[i] );
-        }
+    } else {
     }
 
     for (int i = 0; i < dInpSize; i++) {
@@ -263,13 +263,13 @@ int gpioThread::pinDirection(int pinNo, QString pinDir){
     return 0;
 }
 
-int gpioThread::pinRead(int pinNo){
+int gpioThread::pinRead(int pinNo, bool showMsg){
 
     //Read in the value of the pin
     sprintf(GPIOValue, "/sys/class/gpio/gpio%d/value", pinNo);
 
     if ((buttonHandle = fopen(GPIOValue, "rb+")) == NULL ){
-        printf("Cannot open value handle:pinRead\n");
+        if (showMsg) printf("Cannot open value handle:pinRead\n");
         return -1;
     }
     fread(&setValue, sizeof(char), 1, buttonHandle);
