@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
     QObject::connect(serverx, SIGNAL(readFinished()), gpioX, SLOT(enableWrite()));
 
     // 1sec timer
-    QTimer *timerSec = new QTimer();
+    timerSec = new QTimer();
     QObject::connect(timerSec, SIGNAL(timeout()), gpioX, SLOT(gpioOps()));
     timerSec->start(1000);
 

@@ -9,6 +9,7 @@
 using namespace std;
 
 extern Client *clientx;
+extern QTimer *timerSec;
 
 gpioThread::gpioThread(){
 
@@ -21,13 +22,43 @@ gpioThread::gpioThread(){
     for (int i = 0; i < dOutSize; i++) dOutReadArr[i] = '0';
     dOutReadArr[dOutSize] = '\0';
 
+    bool exportStatus = false;
     for (int i = 0; i < dInpSize; i++) {
-        pinExport( "/sys/class/gpio/export", dInpGpioMap[i] );
+        if (pinRead(dInpGpioMap[i]) != -1) {
+            exportStatus = true;
+            cout << "pin in allready exported" << endl;
+            //timerSec->stop();
+        }
+        dInpArr[i] = setValue[0];
+        clientx->datagram.append( setValue[0] );
+    }
+
+    for (int i = 0; i < dOutSize; i++) {
+        if (pinRead(dOutGpioMap[i]) != -1) {
+            exportStatus = true;
+            cout << "pin out allready exported" << endl;
+            //timerSec->stop();
+        }
+        //pinRead( dOutGpioMap[i] );
+        dOutReadArr[i] = setValue[0];
+        clientx->datagram.append( setValue[0] );
+    }
+
+    if (!exportStatus) {
+        for (int i = 0; i < dInpSize; i++) {
+            pinExport( "/sys/class/gpio/export", dInpGpioMap[i] );
+        }
+
+        for (int i = 0; i < dOutSize; i++) {
+            pinExport( "/sys/class/gpio/export", dOutGpioMap[i] );
+        }
+    }
+
+    for (int i = 0; i < dInpSize; i++) {
         pinDirection( dInpGpioMap[i], "in" );
     }
 
     for (int i = 0; i < dOutSize; i++) {
-        pinExport( "/sys/class/gpio/export", dOutGpioMap[i] );
         pinDirection( dOutGpioMap[i], "out" );
     }
 
